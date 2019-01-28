@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {{>link_files}}
+
+    <title>Pogoda w {{weather.name}}</title>
+
+    
+</head>
+
+<body>
+    <header>
+        <p class="city">Pogoda w {{weather.name}}</p>
+    </header>
+
+    <ul>
+        <li>Państwo : {{country.nativeName}}</li>
+        <li>Flaga : <img id="flag" src="{{country.flag}}" alt=""></li>
+        <li>Stolica Państwa : {{country.capital}} </li>
+        <li>Waluta : {{#each country.currencies}}[{{this.name}} - {{this.symbol}}]{{/each}}</li>
+    </ul>
+
+    {{#each weather.weather}}
+    <p>{{this.description}} : <img src="http://openweathermap.org/img/w/{{this.icon}}.png" alt=""></p>
+    {{else}}
+    <p class="empty">Brak informacji o pogodzie</p>
+    {{/each}}
+
+    <div id="mapid" class="clearfix"></div>
+
+    <footer>
+        <p>Artur Nowacki 😎 &#x24B8; Leszno 2019r</p>
+    </footer>
+
+    <script>
+        var map = L.map('mapid').setView([{{ weather.coord.lat }}, {{ weather.coord.lon }}], 5);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        L.marker([{{ weather.coord.lat }}, {{ weather.coord.lon }}]).addTo(map)
+            .bindPopup('{{name}} - [{{weather.coord.lat}}, {{weather.coord.lon}}]')
+            .openPopup();
+    </script>
+
+</body>
+
+</html>
